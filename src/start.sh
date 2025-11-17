@@ -129,6 +129,15 @@ else
     git pull
 fi
 
+if [ ! -d "$NETWORK_VOLUME/ComfyUI/custom_nodes/ComfyUI-VAE-Utils" ]; then
+    cd $NETWORK_VOLUME/ComfyUI/custom_nodes
+    git clone https://github.com/lrzjason/ComfyUI-VAE-Utils.git
+else
+    echo "Updating VAE Utils"
+    cd $NETWORK_VOLUME/ComfyUI/custom_nodes/ComfyUI-VAE-Utils
+    git pull
+fi
+
 
 echo "🔧 Installing KJNodes packages..."
 pip install --no-cache-dir -r $NETWORK_VOLUME/ComfyUI/custom_nodes/ComfyUI-KJNodes/requirements.txt &
@@ -313,6 +322,8 @@ echo "Downloading VAE..."
 download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1_VAE_bf16.safetensors" "$VAE_DIR/Wan2_1_VAE_bf16.safetensors"
 
 download_model "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$VAE_DIR/wan_2.1_vae.safetensors"
+
+download_model "https://huggingface.co/spacepxl/Wan2.1-VAE-upscale2x/resolve/main/Wan2.1_VAE_upscale2x_imageonly_real_v1.safetensors" "$VAE_DIR/Wan2.1_VAE_upscale2x_imageonly_real_v1.safetensors"
 
 # Download detection models for WanAnimatePreprocess
 echo "Downloading detection models..."
