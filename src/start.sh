@@ -82,7 +82,7 @@ MODELS_DIR="/ComfyUI/models"
 
 # Download models
 echo "Downloading models..."
-mkdir -p ""$MODELS_DIR/detection""
+mkdir -p "$MODELS_DIR/detection"
 download_model "https://huggingface.co/Wan-AI/Wan2.2-Animate-14B/resolve/main/process_checkpoint/det/yolov10m.onnx" "$MODELS_DIR/detection/yolov10m.onnx"
 download_model "https://huggingface.co/Kijai/vitpose_comfy/resolve/main/onnx/vitpose_h_wholebody_data.bin" "$MODELS_DIR/detection/vitpose_h_wholebody_data.bin"
 download_model "https://huggingface.co/Kijai/vitpose_comfy/resolve/main/onnx/vitpose_h_wholebody_model.onnx" "$MODELS_DIR/detection/vitpose_h_wholebody_model.onnx"
