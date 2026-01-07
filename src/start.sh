@@ -32,8 +32,16 @@ echo "Starting SageAttention build..."
 SAGE_PID=$!
 echo "SageAttention build started in background (PID: $SAGE_PID)"
 
-jupyter-lab --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.token='' --NotebookApp.password='' --ServerApp.allow_origin='*' --ServerApp.allow_credentials=True --notebook-dir=/ &
-CUSTOM_NODES_DIR="$NETWORK_VOLUME/ComfyUI/custom_nodes"
+jupyter-lab \
+  --ip=0.0.0.0 --port=8888 \
+  --allow-root --no-browser \
+  --NotebookApp.token='' --NotebookApp.password='' \
+  --ServerApp.allow_origin='*' --ServerApp.allow_credentials=True \
+  --notebook-dir=/ &
+JUP_PID=$!
+echo "Jupyter started (PID: $JUP_PID)"
+
+CUSTOM_NODES_DIR="/ComfyUI/custom_nodes"
 
 # Change to the directory
 cd "$CUSTOM_NODES_DIR" || exit 1
@@ -138,7 +146,5 @@ else
 fi
 
 
-# Start ComfyUI
-echo "▶️  Starting ComfyUI"
-
-nohup python3 "/ComfyUI/main.py" --listen 0.0.0.0 --port 8188 --use-sage-attention > "/comfyui_nohup.log" 2>&1 &
+echo "Starting ComfyUI"
+python3 "/ComfyUI/main.py" --listen 0.0.0.0 --port 8188 --use-sage-attention &
