@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         python3.12 python3.12-venv python3.12-dev \
-        python3-pip \
+        python3-pip openssh-server \
         curl ffmpeg ninja-build git aria2 git-lfs wget vim \
         libgl1 libglib2.0-0 build-essential gcc && \
     \
