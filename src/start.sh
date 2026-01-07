@@ -141,4 +141,4 @@ fi
 # Start ComfyUI
 echo "▶️  Starting ComfyUI"
 
-nohup python3 "/ComfyUI/main.py" --listen 0.0.0.0 --port 8188 --use-sage-attention > "/comfyui_nohup.log" 2>&1
+nohup python3 "/ComfyUI/main.py" --listen 0.0.0.0 --port 8188 --use-sage-attention > "/comfyui_nohup.log" 2>&1 &
