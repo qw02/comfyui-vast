@@ -145,6 +145,48 @@ else
     sed -i 's/^preview_method = .*/preview_method = auto/' "$CONFIG_FILE"
 fi
 
+# Wait for SageAttention build to complete
+echo "Waiting for SageAttention build to complete..."
+while ! [ -f /tmp/sage_build_done ]; do
+    if ps -p $SAGE_PID > /dev/null 2>&1; then
+        echo "⚙️  SageAttention build in progress, this may take up to 5 minutes."
+        sleep 5
+    else
+        # Process finished but no completion marker - check if it failed
+        if ! [ -f /tmp/sage_build_done ]; then
+            echo "⚠️  SageAttention build process ended unexpectedly. Check logs at /tmp/sage_build.log"
+            echo "Continuing with ComfyUI startup..."
+            break
+        fi
+    fi
+done
 
-echo "Starting ComfyUI"
-python3 "/ComfyUI/main.py" --listen 0.0.0.0 --port 8188 --use-sage-attention &
+if [ -f /tmp/sage_build_done ]; then
+    echo "✅ SageAttention build completed successfully!"
+fi
+
+echo "▶️  Starting ComfyUI"
+nohup python3 "/ComfyUI/main.py" --listen --use-sage-attention > "/comfyui_nohup.log" 2>&1 &
+
+    # Counter for timeout
+    counter=0
+    max_wait=45
+
+    until curl --silent --fail "$URL" --output /dev/null; do
+        if [ $counter -ge $max_wait ]; then
+            echo "⚠️  ComfyUI should be up by now. If it's not running, there's probably an error."
+            break
+        fi
+
+        echo "🔄  ComfyUI Starting Up... You can view the startup logs here: /comfyui_nohup.log"
+        sleep 2
+        counter=$((counter + 2))
+    done
+
+    # Only show success message if curl succeeded
+    if curl --silent --fail "$URL" --output /dev/null; then
+        echo "🚀 ComfyUI is UP"
+    fi
+
+    sleep infinity
+fi
