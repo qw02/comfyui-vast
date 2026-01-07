@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# Set up SSH for Vast (Vast injects keys, but we need the dir)
-mkdir -p /var/run/sshd
-mkdir -p /root/.ssh
-chmod 700 /root/.ssh
-
-# Start the SSH server
-echo "Starting SSH server..."
-/usr/sbin/sshd
-
 # Use libtcmalloc for better memory management
 TCMALLOC="$(ldconfig -p | grep -Po "libtcmalloc.so.\d" | head -n 1)"
 export LD_PRELOAD="${TCMALLOC}"
