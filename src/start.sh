@@ -80,7 +80,16 @@ download_model() {
     echo "📥 Downloading $destination_file to $destination_dir..."
 
     # Download without falloc (since it's not supported in your environment)
-    aria2c -x 16 -s 16 -k 1M --continue=true -d "$destination_dir" -o "$destination_file" "$url" &
+    aria2c \
+      -x 16 -s 16 -k 1M \
+      --continue=true \
+      --log-level=warn \
+      --summary-interval=30 \
+      --file-allocation=none \
+      -d "$destination_dir" \
+      -o "$destination_file" \
+      "$url" \
+      >/dev/null 2>&1 &
 
     echo "Download started in background for $destination_file"
 }
@@ -100,6 +109,63 @@ download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xx
 download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_Uni3C_controlnet_fp16.safetensors" "$MODELS_DIR/controlnet/Wan21_Uni3C_controlnet_fp16.safetensors"
 download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank256_bf16.safetensors" "$MODELS_DIR/loras/lightx2v_I2V_14B_480p_cfg_step_distill_rank256_bf16.safetensors"
 download_model "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors" "$MODELS_DIR/clip_vision/clip_vision_h.safetensors"
+download_model "https://github.com/isarandi/nlf/releases/download/v0.3.2/nlf_l_multi_0.3.2.torchscript" "$MODELS_DIR/nlf/nlf_l_multi_0.3.2.torchscript"
+
+# ═══════════════════════════════════════════════════════════
+# Custom nodes to clone/update
+# ═══════════════════════════════════════════════════════════
+REPOS=(
+    "https://github.com/cubiq/ComfyUI_essentials"
+    "https://github.com/kijai/ComfyUI-SCAIL-Pose"
+    "https://github.com/shootthesound/comfyUI-LongLook"
+    "https://github.com/kijai/ComfyUI-WanAnimatePreprocess"
+)
+
+# Clone or update repositories
+for repo in "${REPOS[@]}"; do
+    folder_name=$(basename "$repo" .git)
+    target_dir="$CUSTOM_NODES_DIR/$folder_name"
+
+    if [ ! -d "$target_dir" ]; then
+        echo "Cloning $folder_name..."
+        git -C "$CUSTOM_NODES_DIR" clone "$repo"
+    else
+        echo "Updating $folder_name..."
+        git -C "$target_dir" pull
+    fi
+done
+
+# Install requirements in parallel (only if requirements.txt exists)
+declare -a PIDS=()
+declare -a NAMES=()
+
+for repo in "${REPOS[@]}"; do
+    folder_name=$(basename "$repo" .git)
+    req_file="$CUSTOM_NODES_DIR/$folder_name/requirements.txt"
+
+    if [ -f "$req_file" ]; then
+        echo "🔧 Installing $folder_name packages..."
+        pip install --no-cache-dir -r "$req_file" &
+        PIDS+=($!)
+        NAMES+=("$folder_name")
+    fi
+done
+
+# Wait for pip installs and check results
+FAILED=0
+for i in "${!PIDS[@]}"; do
+    wait "${PIDS[$i]}"
+    if [ $? -eq 0 ]; then
+        echo "✅ ${NAMES[$i]} install complete"
+    else
+        echo "❌ ${NAMES[$i]} install failed."
+        FAILED=1
+    fi
+done
+
+if [ $FAILED -ne 0 ]; then
+    echo "⚠️  Some custom node installations failed. Continuing anyway..."
+fi
 
 # Keep checking until no aria2c processes are running
 while pgrep -x "aria2c" > /dev/null; do
@@ -165,28 +231,7 @@ if [ -f /tmp/sage_build_done ]; then
     echo "✅ SageAttention build completed successfully!"
 fi
 
+URL="http://127.0.0.1:8188"
+
 echo "▶️  Starting ComfyUI"
 nohup python3 "/ComfyUI/main.py" --listen --use-sage-attention > "/comfyui_nohup.log" 2>&1 &
-
-    # Counter for timeout
-    counter=0
-    max_wait=45
-
-    until curl --silent --fail "$URL" --output /dev/null; do
-        if [ $counter -ge $max_wait ]; then
-            echo "⚠️  ComfyUI should be up by now. If it's not running, there's probably an error."
-            break
-        fi
-
-        echo "🔄  ComfyUI Starting Up... You can view the startup logs here: /comfyui_nohup.log"
-        sleep 2
-        counter=$((counter + 2))
-    done
-
-    # Only show success message if curl succeeded
-    if curl --silent --fail "$URL" --output /dev/null; then
-        echo "🚀 ComfyUI is UP"
-    fi
-
-    sleep infinity
-fi
