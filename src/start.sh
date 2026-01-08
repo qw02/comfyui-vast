@@ -121,6 +121,7 @@ REPOS=(
     "https://github.com/shootthesound/comfyUI-LongLook"
     "https://github.com/kijai/ComfyUI-WanAnimatePreprocess"
     "https://github.com/PozzettiAndrea/ComfyUI-SAM3"
+    "https://github.com/crystian/comfyui-crystools.git"
 )
 
 # Clone or update repositories
