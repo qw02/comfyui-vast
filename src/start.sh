@@ -84,7 +84,7 @@ download_model() {
       -x 16 -s 16 -k 1M \
       --continue=true \
       --log-level=warn \
-      --summary-interval=30 \
+      --summary-interval=10 \
       --file-allocation=none \
       -d "$destination_dir" \
       -o "$destination_file" \
