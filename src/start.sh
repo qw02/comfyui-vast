@@ -110,6 +110,7 @@ download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_U
 download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank256_bf16.safetensors" "$MODELS_DIR/loras/lightx2v_I2V_14B_480p_cfg_step_distill_rank256_bf16.safetensors"
 download_model "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors" "$MODELS_DIR/clip_vision/clip_vision_h.safetensors"
 download_model "https://github.com/isarandi/nlf/releases/download/v0.3.2/nlf_l_multi_0.3.2.torchscript" "$MODELS_DIR/nlf/nlf_l_multi_0.3.2.torchscript"
+download_model "https://huggingface.co/1038lab/sam3/resolve/main/sam3.safetensors" "$MODELS_DIR/sam3/sam3.safetensors"
 
 # ═══════════════════════════════════════════════════════════
 # Custom nodes to clone/update
