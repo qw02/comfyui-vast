@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SENTINEL="/workspace/.comfyui_initialized"
+
 # Use libtcmalloc for better memory management
 TCMALLOC="$(ldconfig -p | grep -Po "libtcmalloc.so.\d" | head -n 1)"
 export LD_PRELOAD="${TCMALLOC}"
@@ -237,4 +239,4 @@ fi
 URL="http://127.0.0.1:8188"
 
 echo "▶️  Starting ComfyUI"
-nohup python3 "/ComfyUI/main.py" --listen --use-sage-attention > "/comfyui_nohup.log" 2>&1 &
+nohup python3 "/ComfyUI/main.py" --listen --use-sage-attention --fast fp16_accumulation > "/comfyui_nohup.log" 2>&1 &

@@ -30,11 +30,11 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 # Core Python tooling
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install packaging setuptools wheel pyyaml gdown triton comfy-cli opencv-python onnxruntime-gpu
+    pip install packaging setuptools wheel pyyaml triton comfy-cli opencv-python onnxruntime-gpu
 
 # Runtime libraries
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install pyyaml gdown triton comfy-cli jupyterlab jupyterlab-lsp \
+    pip install pyyaml gdown comfy-cli jupyterlab jupyterlab-lsp \
         jupyter-server jupyter-server-terminals \
         ipykernel jupyterlab_code_formatter
 
