@@ -26,7 +26,7 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install --pre torch torchvision torchaudio \
-        --index-url https://download.pytorch.org/whl/nightly/cu128
+        --index-url https://download.pytorch.org/whl/nightly/cu130
 
 # Core Python tooling
 RUN --mount=type=cache,target=/root/.cache/pip \
@@ -46,10 +46,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 RUN for repo in \
     https://github.com/kijai/ComfyUI-KJNodes.git \
-    https://github.com/rgthree/rgthree-comfy.git \
-    https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git \
-    https://github.com/ClownsharkBatwing/RES4LYF \
-    https://github.com/kijai/ComfyUI-WanVideoWrapper.git; \
+    https://github.com/1038lab/ComfyUI-RMBG.git \
+    https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git; \
     do \
         cd /ComfyUI/custom_nodes; \
         repo_dir=$(basename "$repo" .git); \

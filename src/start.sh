@@ -101,29 +101,19 @@ MODELS_DIR="/ComfyUI/models"
 
 # Download models
 echo "Downloading models..."
-mkdir -p "$MODELS_DIR/detection"
-download_model "https://huggingface.co/Wan-AI/Wan2.2-Animate-14B/resolve/main/process_checkpoint/det/yolov10m.onnx" "$MODELS_DIR/detection/yolov10m.onnx"
-download_model "https://huggingface.co/Kijai/vitpose_comfy/resolve/main/onnx/vitpose_h_wholebody_data.bin" "$MODELS_DIR/detection/vitpose_h_wholebody_data.bin"
-download_model "https://huggingface.co/Kijai/vitpose_comfy/resolve/main/onnx/vitpose_h_wholebody_model.onnx" "$MODELS_DIR/detection/vitpose_h_wholebody_model.onnx"
-download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/SCAIL/Wan21-14B-SCAIL-preview_comfy_bf16.safetensors" "$MODELS_DIR/diffusion_models/Wan21-14B-SCAIL-preview_comfy_bf16.safetensors"
-download_model "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$MODELS_DIR/vae/wan_2.1_vae.safetensors"
-download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-bf16.safetensors" "$MODELS_DIR/text_encoders/umt5-xxl-enc-bf16.safetensors"
-download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_Uni3C_controlnet_fp16.safetensors" "$MODELS_DIR/controlnet/Wan21_Uni3C_controlnet_fp16.safetensors"
-download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank256_bf16.safetensors" "$MODELS_DIR/loras/lightx2v_I2V_14B_480p_cfg_step_distill_rank256_bf16.safetensors"
 download_model "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors" "$MODELS_DIR/clip_vision/clip_vision_h.safetensors"
-download_model "https://github.com/isarandi/nlf/releases/download/v0.3.2/nlf_l_multi_0.3.2.torchscript" "$MODELS_DIR/nlf/nlf_l_multi_0.3.2.torchscript"
-download_model "https://huggingface.co/1038lab/sam3/resolve/main/sam3.pt" "$MODELS_DIR/sam3/sam3.pt"
+download_model "https://huggingface.co/Comfy-Org/SCAIL-2/resolve/main/diffusion_models/wan2.1_14B_SCAIL_2_fp16.safetensors" "$MODELS_DIR/diffusion_models/wan2.1_14B_SCAIL_2_fp16.safetensors"
+download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank256_bf16.safetensors" "$MODELS_DIR/loras/lightx2v_I2V_14B_480p_cfg_step_distill_rank256_bf16.safetensors"
+download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-bf16.safetensors" "$MODELS_DIR/text_encoders/umt5-xxl-enc-bf16.safetensors"
+download_model "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$MODELS_DIR/vae/wan_2.1_vae.safetensors"
+download_model "https://huggingface.co/Comfy-Org/sam3.1/resolve/main/checkpoints/sam3.1_multiplex_fp16.safetensors" "$MODELS_DIR/checkpoints/sam3.1_multiplex_fp16.safetensors"
+
 
 # ═══════════════════════════════════════════════════════════
 # Custom nodes to clone/update
 # ═══════════════════════════════════════════════════════════
 REPOS=(
-    "https://github.com/cubiq/ComfyUI_essentials"
-    "https://github.com/kijai/ComfyUI-SCAIL-Pose"
-    "https://github.com/shootthesound/comfyUI-LongLook"
-    "https://github.com/kijai/ComfyUI-WanAnimatePreprocess"
-    "https://github.com/crystian/comfyui-crystools.git"
-    "https://github.com/qw02/ComfyUI-SAM3"
+    "https://github.com/Brobert-in-aus/scail-auto-extend.git"
 )
 
 # Clone or update repositories
