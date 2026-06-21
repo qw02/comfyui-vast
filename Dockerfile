@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04 AS base
+FROM nvidia/cuda:13.0.3-cudnn-devel-ubuntu24.04 AS base
 
 # Consolidated environment variables
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -47,6 +47,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 RUN for repo in \
     https://github.com/kijai/ComfyUI-KJNodes.git \
     https://github.com/1038lab/ComfyUI-RMBG.git \
+    https://github.com/crystian/comfyui-crystools \
     https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git; \
     do \
         cd /ComfyUI/custom_nodes; \
