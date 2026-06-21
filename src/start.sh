@@ -105,7 +105,8 @@ echo "Downloading models..."
 download_model "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors" "$MODELS_DIR/clip_vision/clip_vision_h.safetensors"
 download_model "https://huggingface.co/Comfy-Org/SCAIL-2/resolve/main/diffusion_models/wan2.1_14B_SCAIL_2_fp16.safetensors" "$MODELS_DIR/diffusion_models/wan2.1_14B_SCAIL_2_fp16.safetensors"
 download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank256_bf16.safetensors" "$MODELS_DIR/loras/lightx2v_I2V_14B_480p_cfg_step_distill_rank256_bf16.safetensors"
-download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-bf16.safetensors" "$MODELS_DIR/text_encoders/umt5-xxl-enc-bf16.safetensors"
+download_model "https://huggingface.co/Comfy-Org/SCAIL-2/resolve/main/loras/wan2.1_SCAIL_2_DPO_lora_bf16.safetensors" "$MODELS_DIR/loras/wan2.1_SCAIL_2_DPO_lora_bf16.safetensors"
+download_model "https://huggingface.co/NSFW-API/NSFW-Wan-UMT5-XXL/resolve/main/nsfw_wan_umt5-xxl_fp8_scaled.safetensors" "$MODELS_DIR/text_encoders/nsfw_wan_umt5-xxl_fp8_scaled.safetensors"
 download_model "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$MODELS_DIR/vae/wan_2.1_vae.safetensors"
 download_model "https://huggingface.co/Comfy-Org/sam3.1/resolve/main/checkpoints/sam3.1_multiplex_fp16.safetensors" "$MODELS_DIR/checkpoints/sam3.1_multiplex_fp16.safetensors"
 download_model "https://huggingface.co/1038lab/RMBG-2.0/resolve/main/model.safetensors" "$MODELS_DIR/RMBG/RMBG-2.0/model.safetensors"
@@ -166,6 +167,9 @@ done
 if [ $FAILED -ne 0 ]; then
     echo "⚠️  Some custom node installations failed. Continuing anyway..."
 fi
+
+# Install Python deps
+pip install -r /ComfyUI/requirements.txt
 
 # Keep checking until no aria2c processes are running
 while pgrep -x "aria2c" > /dev/null; do
@@ -232,9 +236,6 @@ if [ -f /tmp/sage_build_done ]; then
 fi
 
 URL="http://127.0.0.1:8188"
-
-echo "📦 Installing manual dependencies..."
-pip install sqlalchemy
 
 echo "▶️  Starting ComfyUI"
 nohup python3 "/ComfyUI/main.py" --listen --use-sage-attention --fast fp16_accumulation > "/comfyui_nohup.log" 2>&1 &
