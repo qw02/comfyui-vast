@@ -118,6 +118,7 @@ download_model "https://huggingface.co/1038lab/RMBG-2.0/resolve/main/model.safet
 # ═══════════════════════════════════════════════════════════
 REPOS=(
     "https://github.com/qw02/scail-auto-extend"
+    "https://github.com/crystian/comfyui-crystools"
 )
 
 # Clone or update repositories
