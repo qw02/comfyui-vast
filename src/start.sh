@@ -98,6 +98,7 @@ download_model() {
 
 # Define base paths
 MODELS_DIR="/ComfyUI/models"
+mkdir -p "$MODELS_DIR/RMBG/RMBG-2.0"
 
 # Download models
 echo "Downloading models..."
@@ -107,13 +108,16 @@ download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2
 download_model "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-bf16.safetensors" "$MODELS_DIR/text_encoders/umt5-xxl-enc-bf16.safetensors"
 download_model "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$MODELS_DIR/vae/wan_2.1_vae.safetensors"
 download_model "https://huggingface.co/Comfy-Org/sam3.1/resolve/main/checkpoints/sam3.1_multiplex_fp16.safetensors" "$MODELS_DIR/checkpoints/sam3.1_multiplex_fp16.safetensors"
+download_model "https://huggingface.co/1038lab/RMBG-2.0/resolve/main/model.safetensors" "$MODELS_DIR/RMBG/RMBG-2.0/model.safetensors"
+
+
 
 
 # ═══════════════════════════════════════════════════════════
 # Custom nodes to clone/update
 # ═══════════════════════════════════════════════════════════
 REPOS=(
-    "https://github.com/Brobert-in-aus/scail-auto-extend.git"
+    "https://github.com/qw02/scail-auto-extend"
 )
 
 # Clone or update repositories
@@ -227,6 +231,9 @@ if [ -f /tmp/sage_build_done ]; then
 fi
 
 URL="http://127.0.0.1:8188"
+
+echo "📦 Installing manual dependencies..."
+pip install sqlalchemy
 
 echo "▶️  Starting ComfyUI"
 nohup python3 "/ComfyUI/main.py" --listen --use-sage-attention --fast fp16_accumulation > "/comfyui_nohup.log" 2>&1 &
