@@ -96,6 +96,72 @@ download_model() {
     echo "Download started in background for $destination_file"
 }
 
+# Function to download a model from CivitAI
+download_civitai_model() {
+    local model_path="$1"      # e.g., "models/1475095?fileId=1384956"
+    local full_path="$2"       # destination path including filename
+
+    # Get API token from environment variable
+    local token="${CIVITAI_API_TOKEN:-}"
+
+    if [ -z "$token" ]; then
+        echo "❌ CIVITAI_API_TOKEN environment variable not set. Skipping CivitAI download: $model_path"
+        return 1
+    fi
+
+    local destination_dir=$(dirname "$full_path")
+    local destination_file=$(basename "$full_path")
+
+    mkdir -p "$destination_dir"
+
+    # Corruption check: file < 10MB or .aria2 files (same logic as download_model)
+    if [ -f "$full_path" ]; then
+        local size_bytes=$(stat -f%z "$full_path" 2>/dev/null || stat -c%s "$full_path" 2>/dev/null || echo 0)
+        local size_mb=$((size_bytes / 1024 / 1024))
+
+        if [ "$size_bytes" -lt 10485760 ]; then
+            echo "🗑️  Deleting corrupted file (${size_mb}MB < 10MB): $full_path"
+            rm -f "$full_path"
+        else
+            echo "✅ $destination_file already exists (${size_mb}MB), skipping download."
+            return 0
+        fi
+    fi
+
+    # Check for and remove .aria2 control files
+    if [ -f "${full_path}.aria2" ]; then
+        echo "🗑️  Deleting .aria2 control file: ${full_path}.aria2"
+        rm -f "${full_path}.aria2"
+        rm -f "$full_path"
+    fi
+
+    # Build the download URL with token
+    # If model_path already contains query params (like ?fileId=...), append with &
+    # Otherwise append with ?
+    local download_url
+    if [[ "$model_path" == *"?"* ]]; then
+        download_url="https://civitai.com/api/download/${model_path}&token=${token}"
+    else
+        download_url="https://civitai.com/api/download/${model_path}?token=${token}"
+    fi
+
+    echo "📥 Downloading $destination_file from CivitAI to $destination_dir..."
+
+    # Use aria2c (same as download_model) - it follows HTTP redirects by default
+    aria2c \
+      -x 16 -s 16 -k 1M \
+      --continue=true \
+      --log-level=warn \
+      --summary-interval=10 \
+      --file-allocation=none \
+      -d "$destination_dir" \
+      -o "$destination_file" \
+      "$download_url" \
+      >/dev/null 2>&1 &
+
+    echo "Download started in background for $destination_file"
+}
+
 # Define base paths
 MODELS_DIR="/ComfyUI/models"
 mkdir -p "$MODELS_DIR/RMBG/RMBG-2.0"
@@ -111,7 +177,8 @@ download_model "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/reso
 download_model "https://huggingface.co/Comfy-Org/sam3.1/resolve/main/checkpoints/sam3.1_multiplex_fp16.safetensors" "$MODELS_DIR/checkpoints/sam3.1_multiplex_fp16.safetensors"
 download_model "https://huggingface.co/1038lab/RMBG-2.0/resolve/main/model.safetensors" "$MODELS_DIR/RMBG/RMBG-2.0/model.safetensors"
 
-
+# CivitAI model downloads (requires CIVITAI_API_TOKEN environment variable)
+download_civitai_model "models/1475095?fileId=1384956" "$MODELS_DIR/loras/wan_1307155.safetensors"
 
 
 # ═══════════════════════════════════════════════════════════
